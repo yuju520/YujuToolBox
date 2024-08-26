@@ -279,10 +279,10 @@ system_optimization(){
 }
 #endregion
 
-#region //1.5 将时区改为改成上海
+#region //1.5 将时区改为上海
 system_time(){
     sudo timedatectl set-timezone Asia/Shanghai
-    echo "已成功将时区改为改成上海"
+    echo "已成功将时区改为上海"
 }
 #endregion
 
@@ -491,6 +491,26 @@ system_openssh(){
     apt install --only-upgrade openssh-server
     clear
     echo "OpenSSH已升级"
+}
+#endregion
+
+#region //1.12 将默认编码修改为UTF-8
+system_utf(){
+    clear
+    # 检查当前的编码设置
+    current_locale=$(locale | grep LANG)
+    echo "当前系统编码设置: $current_locale"
+    
+    # 设置系统locale为UTF-8
+    sudo localectl set-locale LANG=en_US.UTF-8
+    
+    # 更新环境变量
+    source /etc/environment
+    
+    # 显示当前locale设置
+    echo "当前系统locale设置为:"
+    locale
+    echo "默认编码已成功更改为UTF-8。请重新启动终端或注销并重新登录以应用更改。"
 }
 #endregion
 
@@ -980,13 +1000,14 @@ system_related() {
       echo "2. 更新系统软件包"
       echo "3. 系统清理"
       echo "4. 系统配置调优"
-      echo "5. 将时区改为上海"
+      echo "5. 将时区改为改成上海"
       echo "6. 安装BBRx"
       echo "7. 修改SWAP"
       echo "8. 修改SSH端口"
       echo "9. 安装fail2ban"
       echo "10. 密钥登录"
       echo "11. OpenSSH升级"
+      echo "12. 将默认编码修改为UTF-8"
     echo -e "${pink}========================${white}"
       echo "0. 返回主菜单"
     echo -e "${pink}========================${white}"
@@ -1035,6 +1056,10 @@ system_related() {
           11)
             clear
             system_openssh
+              ;;
+          12)
+            clear
+            system_utf
               ;;
           0)
             yuju_menu
