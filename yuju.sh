@@ -980,7 +980,7 @@ system_related() {
       echo "2. 更新系统软件包"
       echo "3. 系统清理"
       echo "4. 系统配置调优"
-      echo "5. 将时区改为改成上海"
+      echo "5. 将时区改为上海"
       echo "6. 安装BBRx"
       echo "7. 修改SWAP"
       echo "8. 修改SSH端口"
