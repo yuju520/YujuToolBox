@@ -1608,6 +1608,7 @@ docker_install(){
         sudo bash ./docker-install
         rm -f ./docker-install
         echo "Docker安装完成，正在切换镜像源（由1panel提供）..."
+        touch /etc/docker/daemon.json
         cat > /etc/docker/daemon.json << EOF
 {
     "registry-mirrors": ["https://docker.1panel.live"]
@@ -1652,6 +1653,20 @@ docker_status(){
     echo "Docker网络列表"
     docker network ls
     echo ""
+
+    if [ -f /etc/docker/daemon.json ]; then
+        mirrors=$(jq -r '.["registry-mirrors"][]' /etc/docker/daemon.json 2>/dev/null)
+        
+        if [ -n "$mirrors" ]; then
+            echo "镜像源地址"
+            echo "$mirrors"
+        else
+            echo "未配置镜像源"
+        fi
+    else
+        echo ""
+    fi
+
 }
 
 #endregion
