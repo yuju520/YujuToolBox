@@ -30,6 +30,9 @@ curl -sS -O https://raw.githubusercontent.com/yuju520/YujuToolBox/main/yuju.sh &
 wget -q https://raw.githubusercontent.com/yuju520/YujuToolBox/main/yuju.sh && chmod +x yuju.sh && ./yuju.sh
 ```
 
+## 功能介绍
+待补充
+
 ## 项目参考
 https://github.com/kejilion/sh
 
