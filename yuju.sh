@@ -1317,16 +1317,15 @@ system_utf(){
 #region //2.1 SpeedTest带宽测速
 bandwidth_test(){
     clear
-# 获取当前系统的国家代码
+    # 获取当前系统的国家代码
     country=$(curl -s ipinfo.io/country)
 
-# 判断国家是否为中国（CN）
+    # 判断国家是否为中国（CN）
     if [ "$country" == "CN" ]; then
-# 获取系统架构
-# 检查是否已经存在 taierspeed-cli
+        # 检查是否已经存在 taierspeed-cli
         if [ ! -f ./taierspeed-cli ]; then
             echo "taierspeed-cli 不存在，正在下载..."
-        
+            
             # 获取系统架构
             arch=$(uname -m)
         
@@ -1356,28 +1355,30 @@ bandwidth_test(){
             echo "taierspeed-cli 已存在，跳过下载步骤。"
             clear
         fi
-#安装jq和bc解析json信息
+
+        # 安装jq和bc解析json信息
         sudo apt-get install -y jq bc > /dev/null 2>&1 &
         clear
         echo "本机器地理位置为中国，使用taierspeed-cli测速..."
         echo "测速中，请等待..."
-# 运行speedtest并获取JSON输出
+        # 运行speedtest并获取JSON输出
         json_output=$(./taierspeed-cli --json)
-# 提取测试时间
+        
+        # 提取测试时间
         timestamp=$(echo "$json_output" | jq -r '.results[0].timestamp')
         
-# 提取区域信息
+        # 提取区域信息
         location=$(echo "$json_output" | jq -r '.client.city')
         
-# 提取下载速度并转换为MB/s
+        # 提取下载速度并转换为MB/s
         download_bandwidth=$(echo "$json_output" | jq -r '.results[0].download')
         download_speed=$(echo "scale=2; $download_bandwidth / 8" | bc)
         
-# 提取上传速度并转换为MB/s
+        # 提取上传速度并转换为MB/s
         upload_bandwidth=$(echo "$json_output" | jq -r '.results[0].upload')
         upload_speed=$(echo "scale=2; $upload_bandwidth / 8" | bc)
 
-# 输出信息
+        # 输出信息
         echo "测试时间: $timestamp"
         echo "区域信息: $location"
         echo "下载速度: $download_speed MB/s"
@@ -1385,43 +1386,50 @@ bandwidth_test(){
 
     else
         clear
-        sudo apt-get install curl -y > /dev/null 2>&1 &
-        curl -s https://packagecloud.io/install/repositories/ookla/speedtest-cli/script.deb.sh | sudo bash
-        sudo apt-get install speedtest -y
-#安装jq和bc解析json信息
+
+        # 检查是否已经安装speedtest-cli
+        if ! command -v speedtest &> /dev/null; then
+            echo "speedtest-cli 未安装，正在安装..."
+            sudo apt-get install curl -y > /dev/null 2>&1 &
+            curl -s https://packagecloud.io/install/repositories/ookla/speedtest-cli/script.deb.sh | sudo bash
+            sudo apt-get install speedtest -y
+        else
+            echo "speedtest-cli 已安装，跳过安装步骤。"
+        fi
+        
+        # 安装jq和bc解析json信息
         sudo apt-get install -y jq bc > /dev/null 2>&1 &
         clear
         echo "本机器地理位置不在中国，使用speedtest-cli测速..."
         echo "测速中，请等待..."
         
-# 运行speedtest并获取JSON输出
+        # 运行speedtest并获取JSON输出
         json_output=$(speedtest -f json-pretty)
         
-# 提取测试时间
+        # 提取测试时间
         timestamp=$(echo "$json_output" | jq -r '.timestamp')
         
-# 提取区域信息
+        # 提取区域信息
         location=$(echo "$json_output" | jq -r '.server.location')
         
-# 提取下载速度并转换为MB/s
+        # 提取下载速度并转换为MB/s
         download_bandwidth=$(echo "$json_output" | jq -r '.download.bandwidth')
         download_speed=$(echo "scale=2; $download_bandwidth / 1000 / 1000" | bc)
         
-# 提取上传速度并转换为MB/s
+        # 提取上传速度并转换为MB/s
         upload_bandwidth=$(echo "$json_output" | jq -r '.upload.bandwidth')
         upload_speed=$(echo "scale=2; $upload_bandwidth / 1000 / 1000" | bc)
         
-# 提取测试结果URL
+        # 提取测试结果URL
         result_url=$(echo "$json_output" | jq -r '.result.url')
         
-# 输出信息
+        # 输出信息
         echo "测试时间: $timestamp"
         echo "区域信息: $location"
         echo "下载速度: $download_speed MB/s"
         echo "上传速度: $upload_speed MB/s"
         echo "测试结果链接: $result_url"
     fi
-
 }
 #endregion
 
