@@ -1437,7 +1437,7 @@ bandwidth_test(){
 ip_test(){
     clear
     echo"IP质量检测中..."
-    echo "y" | bash <(curl -Ls IP.Check.Place)
+    bash <(curl -Ls IP.Check.Place)
 }
 #endregion
 
