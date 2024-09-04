@@ -1495,6 +1495,33 @@ ip_priority_test(){
 }
 #endregion
 
+#region //2.6 硬盘I/O测试
+io_test() {
+    (LANG=C dd if=/dev/zero of=test_$$ bs=64k count=16k conv=fdatasync && rm -f test_$$ ) 2>&1 | awk -F, '{io=$NF} END { print io}' | sed 's/^[ \t]*//;s/[ \t]*$//'
+}
+
+io_info()
+{
+    echo "开始测试IO性能..."
+	#获得相关数据
+	io1=$( io_test )
+	echo "硬盘I/O (第一次测试) : $io1"
+	io2=$( io_test )
+	echo "硬盘I/O (第二次测试) : $io2"
+	io3=$( io_test )
+	echo "硬盘I/O (第三次测试) : $io3"
+	ioraw1=$( echo $io1 | awk 'NR==1 {print $1}' )
+	[ "`echo $io1 | awk 'NR==1 {print $2}'`" == "GB/s" ] && ioraw1=$( awk 'BEGIN{print '$ioraw1' * 1024}' )
+	ioraw2=$( echo $io2 | awk 'NR==1 {print $1}' )
+	[ "`echo $io2 | awk 'NR==1 {print $2}'`" == "GB/s" ] && ioraw2=$( awk 'BEGIN{print '$ioraw2' * 1024}' )
+	ioraw3=$( echo $io3 | awk 'NR==1 {print $1}' )
+	[ "`echo $io3 | awk 'NR==1 {print $2}'`" == "GB/s" ] && ioraw3=$( awk 'BEGIN{print '$ioraw3' * 1024}' )
+	ioall=$( awk 'BEGIN{print '$ioraw1' + '$ioraw2' + '$ioraw3'}' )
+	ioavg=$( awk 'BEGIN{print '$ioall'/3}' )
+	echo "硬盘I/O (平均值) : $ioavg MB/s"
+}
+#endregion
+
 #3. 常用工具下载
 #region //3.1 curl下载工具
 download_curl(){
@@ -1909,6 +1936,7 @@ test_script() {
       echo "3. nxtrace快速回程测试脚本"
       echo "4. yabs性能测试"
       echo "5. IPv4/IPv6优先级测试"
+      echo "6. 硬盘I/O测试"
       echo -e "${pink}========================${white}"
       echo "0. 返回主菜单"
       echo -e "${pink}========================${white}"
@@ -1933,6 +1961,10 @@ test_script() {
           5)
             clear
             ip_priority_test
+              ;;
+          6)
+            clear
+            io_info
               ;;
           0)
             yuju_menu
