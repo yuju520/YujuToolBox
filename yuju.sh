@@ -1436,7 +1436,7 @@ bandwidth_test(){
 #region //2.2 xykt_IP质量体检脚本
 ip_test(){
     clear
-    echo"IP质量检测中..."
+    echo "IP质量检测中..."
     bash <(curl -Ls IP.Check.Place)
 }
 #endregion
