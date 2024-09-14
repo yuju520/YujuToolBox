@@ -1609,7 +1609,7 @@ download_zsh(){
     apt install zsh -y && apt install curl -y
 	chsh -s $(which zsh)
     curl -sS https://starship.rs/install.sh | sh
-    eval "$(starship init zsh)"
+    echo 'eval "$(starship init zsh)"' >> ~/.zshrc
     echo "zsh+Starship安装完成,重新登录终端即可启用"
 }
 #endregion
