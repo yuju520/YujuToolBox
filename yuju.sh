@@ -1607,9 +1607,9 @@ download_fzf(){
 download_zsh(){
     clear
     apt install zsh -y && apt install curl -y
-    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-    chsh -s $(which zsh)
-    echo "zsh安装完成,重新登录终端即可启用"
+    curl -sS https://starship.rs/install.sh | sh
+    eval "$(starship init zsh)"
+    echo "zsh+Starship安装完成,重新登录终端即可启用"
 }
 #endregion
 
@@ -1995,7 +1995,7 @@ useful_tools(){
       echo "8. btop现代化监控工具"
       echo "9. gdu磁盘占用查看工具"
       echo "10. fzf文件管理工具"
-      echo "11. zsh+ohmyzsh终端美化工具"
+      echo "11. zsh+Starship终端美化工具"
       echo -e "${pink}========================${white}"
       echo "12. 一键安装所有"
       echo -e "${pink}========================${white}"
