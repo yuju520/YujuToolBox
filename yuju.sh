@@ -1358,13 +1358,14 @@ onekey_optimization(){
     echo -e "- OpenSSH升级"
     echo -e "- 设置时区到${huang}上海${bai}"
     echo -e "- 设置虚拟内存${huang}物理内存的2倍${bai}"
-    echo -e "- 设置SSH端口号为${huang}55520${bai}"
     echo -e "- 安装fail2ban"
-    echo -e "- 修改为密钥登录"
     echo -e "- 安装${huang}所有常用工具${bai}"
     echo -e "- 系统配置参数调优"
     echo -e "- 开启${huang}BBRx${bai}加速"
+    echo -e "- 设置SSH端口号为${huang}55520${bai}"
+    echo -e "- 修改为密钥登录"
     echo -e "${pink}============================${white}"
+	echo -e "${red}注意：请牢记端口号和密钥，否则重启后无法登录${white}"
     read -p "确定一键优化吗？(Y/N): " choice
     
     case "$choice" in
@@ -1432,6 +1433,23 @@ onekey_optimization(){
         echo -e "[${lv}OK${bai}] 5/11. 设置虚拟内存${huang}物理内存的2倍${bai}"
     
         echo -e "${pink}============================${white}"
+        system_fail2ban
+        echo -e "[${lv}OK${bai}] 6/11. 安装fail2ban"
+    
+        echo -e "${pink}============================${white}"
+        download_all
+        docker_install
+        echo -e "[${lv}OK${bai}] 7/11. 安装${huang}Docker等常用工具${bai}"
+    
+        echo -e "${pink}============================${white}"
+        system_optimization
+        echo -e "[${lv}OK${bai}] 8/11. 系统配置参数调优"
+    
+        echo -e "${pink}============================${white}"
+        system_bbr
+        echo -e "[${lv}OK${bai}] 9/11. bbrx已安装，重启生效"
+
+        echo -e "${pink}============================${white}"
         # 修改sshd配置文件中的端口号
         sudo sed -i "s/^#\?Port .*/Port 55520/g" /etc/ssh/sshd_config
         
@@ -1440,30 +1458,13 @@ onekey_optimization(){
         
         # 输出成功信息
         echo "SSH端口已修改为 55520"
-        echo -e "[${lv}OK${bai}] 6/11. 设置SSH端口号为${huang}55520${bai}"
-        echo -e "${pink}============================${white}"
-    
-        echo -e "${pink}============================${white}"
-        system_fail2ban
-        echo -e "[${lv}OK${bai}] 7/11. 安装fail2ban"
-    
+        echo -e "[${lv}OK${bai}] 10/11. 设置SSH端口号为${huang}55520${bai}"
+
         echo -e "${pink}============================${white}"
         system_keygen
-        echo -e "[${lv}OK${bai}] 8/11. 修改为密钥登录"
-    
+        echo -e "[${lv}OK${bai}] 11/11. 修改为密钥登录"
         echo -e "${pink}============================${white}"
-        download_all
-        docker_install
-        echo -e "[${lv}OK${bai}] 9/11. 安装${huang}Docker等常用工具${bai}"
-    
-        echo -e "${pink}============================${white}"
-        system_optimization
-        echo -e "[${lv}OK${bai}] 10/11. 系统配置参数调优"
-    
-        echo -e "${pink}============================${white}"
-        system_bbr
-        echo -e "[${lv}OK${bai}] 11/11. bbrx已安装，重启生效"
-    
+ 
         clear
         echo -e "${lv}一键优化已完成，BBRx在重启后生效${bai}"
         echo "您现在的SSH端口为55520，您的SSH Key如下，请牢记："
