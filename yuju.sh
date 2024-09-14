@@ -276,6 +276,7 @@ echo "系统清理完成，清理了 $((cleared_space / 1024))M 空间！"
 #region //1.4 系统配置调优
 system_optimization(){
     bash <(wget -qO- https://raw.githubusercontent.com/jerry048/Tune/main/tune.sh) -t
+	}
 #endregion
 
 #region //1.5 将时区改为上海
@@ -288,6 +289,7 @@ system_time(){
 #region //1.6 BBRx
 system_bbr(){
     bash <(wget -qO- https://raw.githubusercontent.com/jerry048/Tune/main/tune.sh) -x
+	}
 #endregion
 
 #region //1.7 SWAP
