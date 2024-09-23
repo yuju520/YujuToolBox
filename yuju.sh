@@ -517,6 +517,16 @@ system_utf(){
 #region //2.1 SpeedTest带宽测速
 bandwidth_test(){
     clear
+    
+    # Check for jq and bc
+    if ! command -v jq &> /dev/null || ! command -v bc &> /dev/null; then
+        echo "jq和bc未安装，现在进行安装..."
+        sudo apt-get update
+        sudo apt-get install -y jq bc
+    else
+        echo "jq和bc已安装，即将跳过..."
+    fi
+
     # 获取当前系统的国家代码
     country=$(curl -s ipinfo.io/country)
 
@@ -556,8 +566,6 @@ bandwidth_test(){
             clear
         fi
 
-        # 安装jq和bc解析json信息
-        sudo apt-get install -y jq bc > /dev/null 2>&1 &
         clear
         echo "本机器地理位置为中国，使用taierspeed-cli测速..."
         echo "测速中，请等待..."
@@ -597,14 +605,12 @@ bandwidth_test(){
             echo "speedtest-cli 已安装，跳过安装步骤。"
         fi
         
-        # 安装jq和bc解析json信息
-        sudo apt-get install -y jq bc > /dev/null 2>&1 &
         clear
         echo "本机器地理位置不在中国，使用speedtest-cli测速..."
         echo "测速中，请等待..."
         
         # 运行speedtest并获取JSON输出
-        json_output=$(speedtest -f json-pretty)
+        json_output=$(speedtest --accept-license --accept-gdpr -f json-pretty)
         
         # 提取测试时间
         timestamp=$(echo "$json_output" | jq -r '.timestamp')
