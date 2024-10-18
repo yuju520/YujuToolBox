@@ -406,7 +406,7 @@ system_ssh(){
 
 #region //1.9 安装fail2ban
 system_fail2ban(){
-    apt install fail2ban
+    apt install fail2ban -y
     sudo bash -c 'cat <<EOF > /etc/fail2ban/jail.local
 [DEFAULT]
 #忽略的IP列表,不受设置限制（白名单）
